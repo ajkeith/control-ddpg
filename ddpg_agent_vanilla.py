@@ -3,7 +3,7 @@ import random
 import copy
 from collections import namedtuple, deque
 
-from model import Actor, Critic
+from model_vanilla import Actor, Critic
 
 import torch
 import torch.nn.functional as F
@@ -22,7 +22,7 @@ device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 class Agent():
     """Interacts with and learns from the environment."""
     
-    def __init__(self, state_size, action_size, random_seed, shared_buffer):
+    def __init__(self, state_size, action_size, random_seed):
         """Initialize an Agent object.
         
         Params
@@ -49,15 +49,15 @@ class Agent():
         self.noise = OUNoise(action_size, random_seed)
 
         # Replay memory
-        self.memory = shared_buffer
+        self.memory = ReplayBuffer(action_size, BUFFER_SIZE, BATCH_SIZE, random_seed)
     
-    def step(self, state, action, reward, next_state, done, update):
+    def step(self, state, action, reward, next_state, done):
         """Save experience in replay memory, and use random sample from buffer to learn."""
         # Save experience / reward
         self.memory.add(state, action, reward, next_state, done)
 
         # Learn, if enough samples are available in memory
-        if update & (len(self.memory) > BATCH_SIZE):
+        if len(self.memory) > BATCH_SIZE:
             experiences = self.memory.sample()
             self.learn(experiences, GAMMA)
 
@@ -101,7 +101,7 @@ class Agent():
         # Minimize the loss
         self.critic_optimizer.zero_grad()
         critic_loss.backward()
-        torch.nn.utils.clip_grad_norm(self.critic_local.parameters(), 1)
+        torch.nn.utils.clip_grad_norm_(self.critic_local.parameters(), 1)
         self.critic_optimizer.step()
 
         # ---------------------------- update actor ---------------------------- #
@@ -133,14 +133,13 @@ class Agent():
 class OUNoise:
     """Ornstein-Uhlenbeck process."""
 
-    def __init__(self, size, seed, mu=0., theta=0.15, sigma=1.0):
+    def __init__(self, size, seed, mu=0., theta=0.15, sigma=0.2):
         """Initialize parameters and noise process."""
         self.mu = mu * np.ones(size)
         self.theta = theta
         self.sigma = sigma
         self.seed = random.seed(seed)
         self.reset()
-        self.eps = 1.0
 
     def reset(self):
         """Reset the internal state (= noise) to mean (mu)."""
@@ -149,8 +148,7 @@ class OUNoise:
     def sample(self):
         """Update internal state and return it as a noise sample."""
         x = self.state
-        dx = self.theta * (self.mu - x) + (self.sigma * self.eps) * np.array([random.random() for i in range(len(x))])
-        self.eps = max(0.995 * self.eps, 0.001)
+        dx = self.theta * (self.mu - x) + self.sigma * np.array([random.random() for i in range(len(x))])
         self.state = x + dx
         return self.state
 
