@@ -19,6 +19,6 @@ Follow the instructions at the Udacity [Deep Reinforcement Learning](https://git
 
 ## Instructions
 
-Run `control-ddpg/control.ipynb` to train the 20-agent model and visualize the scores over time. The logic for the agent and neural network are in `control-ddpg/ddpg_agent.py` and `control-ddpg/model.py`, respectively. The model weights for the successful agent are saved in `control-ddpg/checkpoint_actor.pth` and `control-ddpg/checkpoint_critic.pth`. Note that there is an alternative approach for the single agent model in the files appended `_vanilla`.
+Run `control.ipynb` to train the 20-agent model and visualize the scores over time. The logic for the agent and neural network are in `ddpg_agent.py` and `model.py`, respectively. The model weights for the successful agent are saved in `checkpoint_actor.pth` and `checkpoint_critic.pth`. Note that there is an alternative approach for the single agent model in the files appended `_vanilla`.
 
 
