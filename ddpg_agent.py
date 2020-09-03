@@ -149,7 +149,6 @@ class OUNoise:
         self.sigma = sigma
         self.seed = random.seed(seed)
         self.reset()
-        self.eps = 1.0
 
     def reset(self):
         """Reset the internal state (= noise) to mean (mu)."""
