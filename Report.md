@@ -28,7 +28,7 @@ These parameters were chosen based on trial and error and based on discussion an
 
 ## Results
 
-This implementation solved the problem by achieving an average reward of at least +30 over 100 episodes in less than 200 total episodes. The full results are shown below. The saved weights are available for the [actor](./control-ddpg/checkpoint_actor.pth) and the [critic](./control-ddpg/checkpoint_critic.pth). 
+This implementation solved the problem by achieving an average reward of at least +30 over 100 episodes in less than 200 total episodes. The full results are shown below. The saved weights are available for the [actor](./checkpoint_actor.pth) and the [critic](./checkpoint_critic.pth). 
 
 ![Results](./results/score.png)
 
